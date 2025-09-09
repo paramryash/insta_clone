@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>InstaClone</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Rails stylesheet via Sprockets -->
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+              <!-- ... other code ... -->
+     <%= turbo_include_tags %>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top mb-5">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Insta Clone</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <% if defined?(account_signed_in?) && account_signed_in? %>
+              <% if File.exist?(Rails.root.join("app/views/layouts/_account_nav.html.erb")) %>
+                <%= render "layouts/account_nav" %>
+              <% else %>
+                <li class="nav-item"><a class="nav-link" href="#">Account Navigation Missing</a></li>
+              <% end %>
+            <% else %>
+              <% if File.exist?(Rails.root.join("app/views/layouts/_public_nav.html.erb")) %>
+                <%= render "layouts/public_nav" %>
+              <% else %>
+                <li class="nav-item"><a class="nav-link" href="#">Public Navigation Missing</a></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <%= yield %>
+    
+    <!-- Bootstrap JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+      
+
+</body>
+</html>

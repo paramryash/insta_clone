@@ -1,0 +1,22 @@
+<%= button_to(
+      current_account.following?(account) ? "Unfollow" : "Follow",
+      account_follow_path(account),
+      method: :post,
+      remote: true,
+    #   form: { data: { turbo: true, turbo_stream: true } },
+      class: "btn btn-sm #{current_account.following?(account) ? 'btn-danger' : 'btn-primary'}"
+    ) %>
+
+
+<%#------------------------------------------------------------------------------------------------------------------------ %>
+<%# <div id="follow_button_<%= account.id %#>"> %>
+  <%# <% if current_account.following?(account) %#> %>
+    <%# <%= button_to "Unfollow", account_follow_path(account), %>
+          <%# method: :delete, %>
+          <%# class: "btn btn-sm btn-danger" %#> %>
+  <%# <% else %#> %>
+    <%# <%= button_to "Follow", account_follow_path(account), %>
+          <%# method: :post, %>
+          <%# class: "btn btn-sm btn-primary" %#> %>
+  <%# <% end %#> %>
+<%# </div> %>

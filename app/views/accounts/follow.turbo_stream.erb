@@ -1,0 +1,9 @@
+<%= turbo_stream.remove "suggestion_#{@account.id}" %>
+
+<%= turbo_stream.replace "followers_count" do %>
+  <span id="followers_count"><%= @account.followers.count %></span>
+<% end %>
+
+<%= turbo_stream.replace "following_count" do %>
+  <span id="following_count"><%= current_account.following.count %></span>
+<% end %>

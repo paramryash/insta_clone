@@ -1,0 +1,17 @@
+<div id="post_<%= post.id %>_likes">
+  <% if current_account.likes.exists?(post: post) %>
+    <%= link_to post_like_path(post, current_account.likes.find_by(post: post)),
+                data: { turbo_method: :delete },
+                class: "like-btn" do %>
+      <i class="fas fa-heart text-danger"></i>
+    <% end %>
+  <% else %>
+    <%= link_to post_likes_path(post),
+                data: { turbo_method: :post },
+                class: "like-btn" do %>
+      <i class="far fa-heart text-dark"></i>
+    <% end %>
+  <% end %>
+
+  <span><%= post.likes.count %> Likes</span>
+</div>

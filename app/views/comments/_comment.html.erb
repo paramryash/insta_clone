@@ -1,0 +1,12 @@
+<div class="comment mb-2">
+  <strong><%= comment.account.username %>:</strong>
+  <%= comment.body %>
+
+  <%= link_to "Reply", "#",
+        class: "text-primary small ms-2",
+        data: {
+          action: "click->comment#reply",
+          username: comment.account.username,
+          post_id: comment.post_id
+        } %>
+</div>
