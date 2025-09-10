@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
     else
       respond_to do |format|
         format.turbo_stream { flash[:alert] = "Something went wrong ❌" }
-        format.html { redirect_to account_path(@post.account.username) }
+        # format.html { redirect_to account_path(@post.account.username) }
       end
     end
   end

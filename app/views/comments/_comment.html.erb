@@ -1,12 +1,74 @@
-<div class="comment mb-2">
-  <strong><%= comment.account.username %>:</strong>
-  <%= comment.body %>
+<div id="comment_<%= comment.id %>" class="border p-2 mb-2 rounded">
+  <strong><%= comment.account&.username || "Unknown User" %>:</strong> <%= comment.body %>
 
-  <%= link_to "Reply", "#",
-        class: "text-primary small ms-2",
-        data: {
-          action: "click->comment#reply",
-          username: comment.account.username,
-          post_id: comment.post_id
-        } %>
+  <!-- Reply Link -->
+  <a href="#" class="text-primary small reply-link" data-comment-id="<%= comment.id %>">
+    Reply
+  </a>
+
+  <!-- Reply Form (hidden by default) -->
+  <div id="reply-form-<%= comment.id %>" class="mt-2" style="display:none;">
+    <%= form_with(model: [comment.post, Comment.new], local: false, html: { class: "reply-form", data: { comment_id: comment.id } }) do |f| %>
+      <%= f.hidden_field :parent_id, value: comment.id %>
+      <%= f.text_field :body, placeholder: "Write a reply...", class: "form-control mb-2 reply-body" %>
+      <%= f.submit "Reply", class: "btn btn-sm btn-primary" %>
+    <% end %>
+  </div>
+
+  <!-- Show Replies -->
+  <% comment.replies&.each do |reply| %>
+    <div class="ms-4 mt-2 p-2 border-start">
+      <strong><%= reply.account.username %>:</strong> <%= reply.body %>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    // Toggle reply form visibility
+    document.querySelectorAll(".reply-link").forEach(function(link) {
+      link.addEventListener("click", function(event) {
+        event.preventDefault();
+        const commentId = this.getAttribute("data-comment-id");
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        if (replyForm.style.display === "none") {
+          replyForm.style.display = "block";
+        } else {
+          // replyForm.style.display = "none";
+        }
+      });
+    });
+
+    // Clear reply form after submission
+    document.querySelectorAll(".reply-form").forEach(function(form) {
+      form.addEventListener("ajax:success", function() {
+        const textField = this.querySelector(".reply-body");
+        if (textField) {
+          textField.value = ""; // Clear the text field
+        }
+      });
+    });
+  });
+
+document.addEventListener("turbo:submit-end", function(event) {
+  // Sirf reply forms ke liye
+  if (event.target.matches(".reply-form")) {
+    // form reset karega (text box clear ho jayega)
+    event.target.reset();
+
+    // optional: form ko hide karna ho to
+    const commentId = event.target.dataset.commentId;
+    if (commentId) {
+      const form = document.getElementById(`reply-form-${commentId}`);
+      if (form) form.style.display = "none";
+    }
+  }
+
+  // Sirf new comment form ke liye
+  if (event.target.matches("form[id^='new_comment_form_']")) {
+    event.target.reset();
+  }
+});
+
+
+</script>

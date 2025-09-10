@@ -1,11 +1,37 @@
-<div id="new_comment_<%= post.id %>">
-  <%= form_with(model: [post, Comment.new]) do |form| %>
-    <div class="mb-2">
-      <%= form.text_area :body,
-          class: "form-control",
-          placeholder: "Write a comment...",
-          value: (params[:reply_to].present? ? "@#{params[:reply_to]} " : "") %>
-    </div>
-    <%= form.submit "Comment", class: "btn btn-sm btn-primary" %>
+<div id="comments_for_post_<%= post.id %>">
+  <% post.comments.where(parent_id: nil).each do |comment| %>
+    <%= render partial: "comments/comment", locals: { comment: comment } %>
   <% end %>
 </div>
+
+
+<%= form_with(model: [post, Comment.new], local: false, id: "new_comment_form_#{post.id}") do |f| %>
+  <%= f.hidden_field :parent_id, value: nil %>
+  <%= f.text_field :body, 
+        placeholder: "Write a comment...", 
+        class: "form-control mb-2" %>
+  <%= f.submit "Comment", class: "btn btn-sm btn-dark" %>
+<% end %>
+
+
+<script>
+document.addEventListener("turbo:submit-end", function(event) {
+  // Reply form ke liye
+  if (event.target.matches(".reply-form")) {
+    event.target.reset();
+
+    const commentId = event.target.dataset.commentId;
+    if (commentId) {
+      const form = document.getElementById(`reply-form-${commentId}`);
+      if (form) form.style.display = "none";
+    }
+  }
+
+  // New comment form ke liye
+  if (event.target.matches("form[id^='new_comment_form_']")) {
+    event.target.reset();
+  }
+});
+
+
+</script>
