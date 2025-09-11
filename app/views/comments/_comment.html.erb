@@ -1,6 +1,5 @@
-<div id="comment_<%= comment.id %>" class="border p-2 mb-2 rounded">
+<div id="comment_<%= comment.id %>" class="p-2 mb-2 ">
   <strong><%= comment.account&.username || "Unknown User" %>:</strong> <%= comment.body %>
-
   <!-- Reply Link -->
   <a href="#" class="text-primary small reply-link" data-comment-id="<%= comment.id %>">
     Reply
@@ -15,29 +14,42 @@
     <% end %>
   </div>
 
-  <!-- Show Replies -->
-  <% comment.replies&.each do |reply| %>
-    <div class="ms-4 mt-2 p-2 border-start">
-      <strong><%= reply.account.username %>:</strong> <%= reply.body %>
-    </div>
+  <!-- View All/Hide Replies Link -->
+  <% if comment.replies.any? %>
+    <a href="#" class="text-primary small toggle-replies-link" data-comment-id="<%= comment.id %>">
+      View All
+    </a>
   <% end %>
+
+  <!-- Replies Section -->
+  <div id="comments_<%= comment.id %>" class="replies-section mt-2" style="display:none;">
+    <% comment.replies&.each do |reply| %>
+      <div class="ms-4 mt-2 p-2 border-start">
+         <%= render partial: "comments/comment", locals: { comment: reply } %>
+      </div>
+    <% end %>
+  </div>
+
+
 </div>
 
 <script>
-  document.addEventListener("turbo:load", function() {
-    // Toggle reply form visibility
-    document.querySelectorAll(".reply-link").forEach(function(link) {
-      link.addEventListener("click", function(event) {
-        event.preventDefault();
-        const commentId = this.getAttribute("data-comment-id");
-        const replyForm = document.getElementById(`reply-form-${commentId}`);
-        if (replyForm.style.display === "none") {
-          replyForm.style.display = "block";
-        } else {
-          // replyForm.style.display = "none";
-        }
-      });
-    });
+document.addEventListener("turbo:load", function() {
+  // Reply link toggle
+document.querySelectorAll(".reply-link").forEach(function(link) {
+  link.addEventListener("click", function(event) {
+    event.preventDefault();
+    const commentId = this.getAttribute("data-comment-id");
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+
+    if ( replyForm.style.display === "none") {
+      replyForm.style.display = "block"; // show form
+    }else{
+        // replyForm.style.display = "none";  // Hide form
+      }
+  });
+});
+
 
     // Clear reply form after submission
     document.querySelectorAll(".reply-form").forEach(function(form) {
@@ -48,27 +60,24 @@
         }
       });
     });
+
   });
+    // Toggle replies visibility
+document.querySelectorAll(".toggle-replies-link").forEach(function(link) {
+  link.addEventListener("click", function(event) {
+    event.preventDefault();
+    const commentId = this.getAttribute("data-comment-id");
+    const repliesSection = document.getElementById(`comments_${commentId}`);
 
-document.addEventListener("turbo:submit-end", function(event) {
-  // Sirf reply forms ke liye
-  if (event.target.matches(".reply-form")) {
-    // form reset karega (text box clear ho jayega)
-    event.target.reset();
-
-    // optional: form ko hide karna ho to
-    const commentId = event.target.dataset.commentId;
-    if (commentId) {
-      const form = document.getElementById(`reply-form-${commentId}`);
-      if (form) form.style.display = "none";
+    // Agar hidden hai ("" ya "none")
+    if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
+      repliesSection.style.display = "block";
+      this.textContent = "Hide Replies";
+    } else {
+      repliesSection.style.display = "none";
+      this.textContent = "View All";
     }
-  }
-
-  // Sirf new comment form ke liye
-  if (event.target.matches("form[id^='new_comment_form_']")) {
-    event.target.reset();
-  }
+  });
 });
-
 
 </script>

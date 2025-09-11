@@ -13,10 +13,9 @@
   <%= f.submit "Comment", class: "btn btn-sm btn-dark" %>
 <% end %>
 
-
 <script>
 document.addEventListener("turbo:submit-end", function(event) {
-  // Reply form ke liye
+  
   if (event.target.matches(".reply-form")) {
     event.target.reset();
 
@@ -26,12 +25,9 @@ document.addEventListener("turbo:submit-end", function(event) {
       if (form) form.style.display = "none";
     }
   }
-
-  // New comment form ke liye
   if (event.target.matches("form[id^='new_comment_form_']")) {
     event.target.reset();
   }
 });
-
 
 </script>

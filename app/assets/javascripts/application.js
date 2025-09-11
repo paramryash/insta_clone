@@ -1,6 +1,5 @@
 //= require rails-ujs
-//= require turbolinks
-//= require jquery
-//= require reply
+//= require activestorage
+//= require_tree .
 
-import "./reply" 
+// import "./reply" 

@@ -1,3 +1,5 @@
+// app/javascript/application.js
+
 import { Application } from "@hotwired/stimulus"
 import "@hotwired/turbo-rails"
 
@@ -7,7 +9,7 @@ application.debug = false
 window.Stimulus   = application
 
 // Import your controllers (if you have them)
-import "./controllers"
+// import "./controllers"
 
 // Import reply functionality
 import "../assets/javascripts/reply"
