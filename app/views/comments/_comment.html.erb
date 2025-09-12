@@ -1,5 +1,6 @@
 <div id="comment_<%= comment.id %>" class="p-2 mb-2 ">
-  <strong><%= comment.account&.username || "Unknown User" %>:</strong> <%= comment.body %>
+  <strong><%= comment.account&.username || "Unknown User" %>:</strong>
+    <%= comment.body %>
   <!-- Reply Link -->
   <a href="#" class="text-primary small reply-link" data-comment-id="<%= comment.id %>">
     Reply
@@ -62,6 +63,7 @@ document.querySelectorAll(".reply-link").forEach(function(link) {
     });
 
   });
+  
     // Toggle replies visibility
 document.querySelectorAll(".toggle-replies-link").forEach(function(link) {
   link.addEventListener("click", function(event) {
