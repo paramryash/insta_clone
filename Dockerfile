@@ -7,42 +7,43 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 # Working directory
 WORKDIR /rails
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+# Production environment
+ENV RAILS_ENV=production \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT=development
 
-# --------------------------
-# Build stage
-# --------------------------
+# ---------------------
+# Build Stage
+# ---------------------
 FROM base as build
 
-# Set environment variables to skip DB check during assets precompile
-ENV RAILS_ENV=production
-ENV SECRET_KEY_BASE_DUMMY=1
-ENV DISABLE_DATABASE_ENVIRONMENT_CHECK=1
-
-# Install build dependencies
+# Install dependencies for gems
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
 
 # Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+    rm -rf ~/.bundle "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Copy application code
+# Copy app code
 COPY . .
 
-# Precompile bootsnap and Rails assets
+# Precompile bootsnap code
 RUN bundle exec bootsnap precompile app/ lib/
-RUN bin/rails assets:precompile
 
-# --------------------------
-# Final stage
-# --------------------------
+# ---------------------
+# Precompile assets without
+ENV SECRET_KEY_BASE=dummy \
+    RAILS_ENV=production \
+    DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+RUN bundle exec rails assets:precompile
+
+
+# ---------------------
+# Final Stage
+# ---------------------
 FROM base
 
 # Install runtime dependencies
@@ -50,16 +51,17 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Copy gems and application from build stage
+# Copy gems and app from build stage
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-# Create non-root user and set permissions
+# Create non-root user for runtime
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
-# Entrypoint and default command
+# Entrypoint and server
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 CMD ["./bin/rails", "server"]
+
