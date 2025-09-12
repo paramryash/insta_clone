@@ -78,4 +78,10 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  database: <%= ENV['DATABASE_URL'].split('/').last if ENV['DATABASE_URL'] %>
   url: <%= ENV['DATABASE_URL'] %>
+  

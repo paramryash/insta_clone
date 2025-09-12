@@ -20,7 +20,7 @@ FROM base as build
 
 # Install dependencies for gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config nodejs yarn
 
 # Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
@@ -33,13 +33,13 @@ COPY . .
 # Precompile bootsnap code
 RUN bundle exec bootsnap precompile app/ lib/
 
-# ---------------------
-# Precompile assets without
-ENV SECRET_KEY_BASE=dummy \
+# Precompile assets with dummy secret key
+ENV SECRET_KEY_BASE=dummy1234567890dummy1234567890dummy1234567890dummy12 \
     RAILS_ENV=production \
     DISABLE_DATABASE_ENVIRONMENT_CHECK=1
-RUN bundle exec rails assets:precompile
 
+# Temporary database URL for assets precompile
+RUN DATABASE_URL=postgresql://user:pass@localhost/db_prod bundle exec rails assets:precompile
 
 # ---------------------
 # Final Stage
@@ -48,7 +48,7 @@ FROM base
 
 # Install runtime dependencies
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl libvips postgresql-client nodejs && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Copy gems and app from build stage
@@ -61,7 +61,5 @@ RUN useradd rails --create-home --shell /bin/bash && \
 USER rails:rails
 
 # Entrypoint and server
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
-
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
