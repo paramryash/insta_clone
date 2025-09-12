@@ -64,9 +64,12 @@
   </div>
 
 
-  <div class="actions  mt-1">
+<%= form_for @account, url: account_path(@account.username), method: :patch do |f| %>
+  <div class="actions mt-1">
     <%= f.submit "Update", class: "btn btn-primary" %>
   </div>
+<% end %>
+
 <% end %>
 
 <h3>Cancel my account</h3>

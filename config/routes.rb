@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   get "show/:username" => "accounts#show", as: :show
 
   resources :posts, only: %i[new create show]
-  resources :accounts, only: %i[show index], param: :username
+resources :accounts, only: %i[index show edit update], param: :username
+
 
   resources :posts do
     resources :likes, only: %i[create destroy]

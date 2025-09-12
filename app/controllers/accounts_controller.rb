@@ -21,6 +21,16 @@ class AccountsController < ApplicationController
     @posts = @account.posts.active
   end
 
+def update
+  if @account.update(account_params)
+    render :show
+  else
+    render :edit, status: :unprocessable_entity
+  end
+end
+
+
+
   def follow
     @account = Account.find(params[:account_id])
 
