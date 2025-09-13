@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
   before_action :set_account, only: [:show]
 
   def index
-    @posts = Post.active
+        @posts = Post.all.order(created_at: :desc)
     @accounts = Account.where.not(id: current_account.id)
     @comments= Comment.all
     #  @posts = Post.all.includes(:account, :comments)
