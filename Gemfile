@@ -30,6 +30,8 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # gem 'turbolinks', '~> 5'
+gem 'cloudinary', '~> 2.0'
+gem 'activestorage-cloudinary-service'
 
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
