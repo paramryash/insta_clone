@@ -1,12 +1,17 @@
 <div id="comment_<%= comment.id %>" class="p-2 mb-2 ">
   <strong><%= comment.account&.username || "Unknown User" %>:</strong>
     <%= comment.body %>
-  <!-- Reply Link -->
   <a href="#" class="text-primary small reply-link" data-comment-id="<%= comment.id %>">
     Reply
   </a>
+  <% if comment.replies.any? %>
+    <a href="#" class="text-primary small toggle-replies-link" data-comment-id="<%= comment.id %>">
+      View All
+    </a>
+  <% end %>
 
-  <!-- Reply Form (hidden by default) -->
+
+
   <div id="reply-form-<%= comment.id %>" class="mt-2" style="display:none;">
     <%= form_with(model: [comment.post, Comment.new], local: false, html: { class: "reply-form", data: { comment_id: comment.id } }) do |f| %>
       <%= f.hidden_field :parent_id, value: comment.id %>
@@ -15,14 +20,16 @@
     <% end %>
   </div>
 
-  <!-- View All/Hide Replies Link -->
-  <% if comment.replies.any? %>
-    <a href="#" class="text-primary small toggle-replies-link" data-comment-id="<%= comment.id %>">
-      View All
-    </a>
-  <% end %>
 
-  <!-- Replies Section -->
+        <% if comment.account == current_account %>
+<%= button_to post_comment_path(comment.post, comment),
+      method: :delete,
+      data: { turbo_confirm: "Are you sure?" },
+      class: "btn btn-sm btn-danger p-1 d-flex align-items-center justify-content-center" do %>
+  <i class="fas fa-trash"></i>
+<% end %>
+<% end %>
+
   <div id="comments_<%= comment.id %>" class="replies-section mt-2" style="display:none;">
     <% comment.replies&.each do |reply| %>
       <div class="ms-4 mt-2 p-2 border-start">
@@ -36,7 +43,7 @@
 
 <script>
 document.addEventListener("turbo:load", function() {
-  // Reply link toggle
+
 document.querySelectorAll(".reply-link").forEach(function(link) {
   link.addEventListener("click", function(event) {
     event.preventDefault();
@@ -44,34 +51,32 @@ document.querySelectorAll(".reply-link").forEach(function(link) {
     const replyForm = document.getElementById(`reply-form-${commentId}`);
 
     if ( replyForm.style.display === "none") {
-      replyForm.style.display = "block"; // show form
+      replyForm.style.display = "block"; 
     }else{
-        // replyForm.style.display = "none";  // Hide form
+       
       }
   });
 });
 
 
-    // Clear reply form after submission
     document.querySelectorAll(".reply-form").forEach(function(form) {
       form.addEventListener("ajax:success", function() {
         const textField = this.querySelector(".reply-body");
         if (textField) {
-          textField.value = ""; // Clear the text field
+          textField.value = ""; 
         }
       });
     });
 
   });
-  
-    // Toggle replies visibility
+
 document.querySelectorAll(".toggle-replies-link").forEach(function(link) {
   link.addEventListener("click", function(event) {
     event.preventDefault();
     const commentId = this.getAttribute("data-comment-id");
     const repliesSection = document.getElementById(`comments_${commentId}`);
 
-    // Agar hidden hai ("" ya "none")
+
     if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
       repliesSection.style.display = "block";
       this.textContent = "Hide Replies";

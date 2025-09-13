@@ -37,7 +37,18 @@
       <% if post.image.attached? %>
         <div class="card shadow-lg border-0" style="width: 260px;">
           <div class="card-body text-center border-0 bg-#fff p-2  border border-gray-30">
+        <div class="d-flex justify-content-between align-items-center">
             <h6 class="fw-bold  "><%= post.account.username %></h6>
+        <% if current_account == post.account %>
+       <%= button_to post_path(post),
+        method: :delete,
+         class: "btn btn-sm btn-outline-danger p-1",
+        form: { data: { turbo_confirm: "Are you sure?" } } do %>
+      <i class="fas fa-trash"></i>
+     <% end %>
+     <% end %>
+         </div>
+
           </div>
           <%= image_tag post.image, style: "height: 250px; object-fit: cover;" %>
         </div>

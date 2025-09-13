@@ -18,6 +18,19 @@ class CommentsController < ApplicationController
     end
   end
 
+  def destroy
+    @comment= Comment.find(params[:id])
+
+    if @comment.account_id== current_account.id
+      @comment.destroy
+    end
+
+    respond_to do |format|
+    format.turbo_stream
+    format.html { redirect_back(fallback_location: root_path) }
+   end
+  end
+
   private
 
   def set_post

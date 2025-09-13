@@ -1,7 +1,9 @@
 <div class="container">
   <div class="row">
   
-    <div class="col-md-8">
+    <div class="col-md-8 order-2 order-md-1 ">
+      <% @accounts.each do |other|%>
+      <%if current_account.following?(other)%>
       <% @posts.each do |post| %>
         <div class="post bg-white p-3 mb-4  border rounded" id="post-<%= post.id %>" >
         
@@ -44,10 +46,13 @@
 </div>             
   </div>
       <% end %>
+      <% end %>
+      <% end %>
+
     </div>
 
 
-    <div class="col-md-4">
+    <div class="col-md-4 order-1 order-md-2">
 
       <div class="account-info bg-white p-3 mb-4 border rounded">
         <div class="d-flex align-items-center">

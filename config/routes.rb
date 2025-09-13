@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get "/dashboard" => "accounts#index"
   get "show/:username" => "accounts#show", as: :show
 
-  resources :posts, only: %i[new create show]
+  resources :posts, only: %i[new create show destroy ]
 resources :accounts, only: %i[index show edit update], param: :username
 
 
@@ -25,7 +25,7 @@ resources :accounts, only: %i[index show edit update], param: :username
 # end
 
 resources :posts do
-  resources :comments, only: [:create]
+  resources :comments, only: [:create, :destroy]
 end
 
 # resources :posts do
