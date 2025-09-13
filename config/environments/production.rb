@@ -91,6 +91,7 @@ Rails.application.configure do
 
   config.active_storage.service = :cloudinary
 
+  
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

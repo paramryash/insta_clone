@@ -33,6 +33,9 @@ gem "stimulus-rails"
 gem 'cloudinary', '~> 2.0'
 gem 'activestorage-cloudinary-service'
 
+gem 'dotenv-rails', groups: [:development, :test]
+
+
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
