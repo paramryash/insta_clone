@@ -1,7 +1,8 @@
 <div id="comments_for_post_<%= post.id %>">
-  <% post.comments.where(parent_id: nil).each do |comment| %>
-    <%= render partial: "comments/comment", locals: { comment: comment } %>
-  <% end %>
+<% post.comments.where(parent_id: nil).each do |comment| %>
+  <%= render partial: "comments/comment", locals: { comment: comment, post: post } %>
+<% end %>
+
 </div>
 
 
@@ -19,12 +20,13 @@ document.addEventListener("turbo:submit-end", function(event) {
   if (event.target.matches(".reply-form")) {
     event.target.reset();
 
-    const commentId = event.target.dataset.commentId;
-    if (commentId) {
-      const form = document.getElementById(`reply-form-${commentId}`);
-      if (form) form.style.display = "none";
-    }
+    // const commentId = event.target.dataset.commentId;
+    // if (commentId) {
+    //   const form = document.getElementById(`reply-form-${commentId}`);
+    //   if (form) form.style.display = "none";
+    // }
   }
+  
   if (event.target.matches("form[id^='new_comment_form_']")) {
     event.target.reset();
   }

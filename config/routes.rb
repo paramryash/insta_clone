@@ -24,8 +24,16 @@ resources :accounts, only: %i[index show edit update], param: :username
 #   resource :follow, only: [:create, :destroy] ,as: :follow
 # end
 
+# resources :posts do
+# end
+
 resources :posts do
-  resources :comments, only: [:create, :destroy]
+    resources :comments, only: [:create, :destroy]
+  resources :comments do
+    member do
+      get :toggle_replies
+    end
+  end
 end
 
 # resources :posts do

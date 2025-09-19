@@ -1,15 +1,13 @@
-// app/javascript/application.js
-
 import { Application } from "@hotwired/stimulus"
 import "@hotwired/turbo-rails"
+import "./controllers"
 
-// Stimulus start
+
 const application = Application.start()
+
+// Configure Stimulus development experience
 application.debug = false
-window.Stimulus   = application
+window.Stimulus = application
 
-// Import your controllers (if you have them)
-// import "./controllers"
-
-// Import reply functionality
-import "../assets/javascripts/reply"
+export { application }
+import "controllers"

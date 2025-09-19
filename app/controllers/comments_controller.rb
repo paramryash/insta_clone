@@ -31,6 +31,17 @@ class CommentsController < ApplicationController
    end
   end
 
+  def toggle_replies
+  @comment = Comment.find(params[:id])
+  @post = @comment.post
+  @show_replies = params[:hide].blank?  # true if not hiding, false if hiding
+
+  respond_to do |format|
+    format.turbo_stream
+  end
+  end
+
+
   private
 
   def set_post

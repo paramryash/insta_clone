@@ -1,16 +1,19 @@
 <div id="comment_<%= comment.id %>" class="p-2 mb-2 ">
   <strong><%= comment.account&.username || "Unknown User" %>:</strong>
     <%= comment.body %>
-  <a href="#" class="text-primary small reply-link" data-comment-id="<%= comment.id %>">
+  <a href="#" class="text-primary small reply-link"
+   data-comment-id="<%= comment.id %>"
+    onclick="toggleReplies(event, this)">
     Reply
   </a>
+
   <% if comment.replies.any? %>
-    <a href="#" class="text-primary small toggle-replies-link" data-comment-id="<%= comment.id %>">
+    <a href="#" class="text-primary small toggle-replies-link"
+     data-comment-id="<%= comment.id %>"
+      onclick="toggleReplies(event, this)">
       View All
     </a>
   <% end %>
-
-
 
   <div id="reply-form-<%= comment.id %>" class="mt-2" style="display:none;">
     <%= form_with(model: [comment.post, Comment.new], local: false, html: { class: "reply-form", data: { comment_id: comment.id } }) do |f| %>
@@ -42,49 +45,41 @@
 </div>
 
 <script>
-document.addEventListener("turbo:load", function() {
+document.addEventListener("turbo:load", function () {
+  // Reply toggle
+  document.addEventListener("click", function (event) {
+    if (event.target.matches(".reply-link")) {
+      event.preventDefault();
+      const commentId = event.target.dataset.commentId;
+      const replyForm = document.getElementById(`reply-form-${commentId}`);
 
-document.querySelectorAll(".reply-link").forEach(function(link) {
-  link.addEventListener("click", function(event) {
-    event.preventDefault();
-    const commentId = this.getAttribute("data-comment-id");
-    const replyForm = document.getElementById(`reply-form-${commentId}`);
+      if (!replyForm) return;
 
-    if ( replyForm.style.display === "none") {
-      replyForm.style.display = "block"; 
-    }else{
-       
+      if (replyForm.style.display === "none" || replyForm.style.display === "") {
+        replyForm.style.display = "block";
+        event.target.textContent = "Hide";
+      } else {
+        replyForm.style.display = "none";
+        event.target.textContent = "Reply";
       }
-  });
-});
+    }
 
+    // Replies toggle
+    if (event.target.matches(".toggle-replies-link")) {
+      event.preventDefault();
+      const commentId = event.target.dataset.commentId;
+      const repliesSection = document.getElementById(`comments_${commentId}`);
 
-    document.querySelectorAll(".reply-form").forEach(function(form) {
-      form.addEventListener("ajax:success", function() {
-        const textField = this.querySelector(".reply-body");
-        if (textField) {
-          textField.value = ""; 
-        }
-      });
-    });
+      if (!repliesSection) return;
 
-  });
-
-document.querySelectorAll(".toggle-replies-link").forEach(function(link) {
-  link.addEventListener("click", function(event) {
-    event.preventDefault();
-    const commentId = this.getAttribute("data-comment-id");
-    const repliesSection = document.getElementById(`comments_${commentId}`);
-
-
-    if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
-      repliesSection.style.display = "block";
-      this.textContent = "Hide Replies";
-    } else {
-      repliesSection.style.display = "none";
-      this.textContent = "View All";
+      if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
+        repliesSection.style.display = "block";
+        event.target.textContent = "Hide Replies";
+      } else {
+        repliesSection.style.display = "none";
+        event.target.textContent = "View All";
+      }
     }
   });
 });
-
 </script>

@@ -1,9 +1,11 @@
 <% if @comment.parent_id.present? %>
-  <%= turbo_stream.prepend "comments_#{@comment.parent_id}" do %>
-    <%= render partial: "comments/comment", locals: { comment: @comment } %>
+  <!-- Agar reply hai -->
+  <%= turbo_stream.replace "comment_#{@comment.parent_id}" do %>
+    <%= render partial: "comments/comment", locals: { comment: Comment.find(@comment.parent_id) } %>
   <% end %>
 <% else %>
-  <%= turbo_stream.prepend "comments_for_post_#{@post.id}" do %>
+  <!-- Agar normal comment hai -->
+  <%= turbo_stream.append "comments_for_post_#{@comment.post.id}" do %>
     <%= render partial: "comments/comment", locals: { comment: @comment } %>
   <% end %>
 <% end %>
