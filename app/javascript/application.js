@@ -1,13 +1,4 @@
 import { Application } from "@hotwired/stimulus"
-import "@hotwired/turbo-rails"
-import "./controllers"
-
-
+import CommentController from "./controllers/comment_controller"
 const application = Application.start()
-
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus = application
-
-export { application }
-import "controllers"
+application.register("comment", CommentController)
