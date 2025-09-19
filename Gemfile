@@ -59,6 +59,7 @@ group :development, :test do
   gem "debug", platforms: %i[mri windows]
 end
 
+
 group :development do
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -73,4 +74,3 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "tailwindcss-rails", "~> 4.3"
