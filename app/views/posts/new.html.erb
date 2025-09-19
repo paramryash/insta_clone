@@ -1,13 +1,54 @@
-<div class="d-flex justify-content-center " >
+<div class="d-flex justify-content-center mb-4">
+  <div class="card shadow-sm p-3 w-100" style="max-width: 600px;">
+    <h5 class="fw-bold mb-3 text-center">Create a Post</h5>
 
-<%= form_for @post, html: { multipart: true } do |f| %>
-  <%= f.file_field :image %>
-<%= f.text_area :description, placeholder: "Write something...", class: "form-control" %>
+    <%= form_for @post, html: { multipart: true, id: "post_form" } do |f| %>
+      
+      <!-- Image Upload with Preview -->
+      <div class="mb-3 text-center">
+        <%= f.label :image, "Upload Image", class: "form-label fw-bold" %>
+        <%= f.file_field :image, class: "form-control", id: "post_image_input" %>
+        <div class="mt-2">
+          <img id="post_image_preview" src="#" alt="Image Preview" style="display:none; max-width:100%; max-height:300px; border-radius:8px; object-fit:cover;">
+        </div>
+      </div>
 
+      <!-- Description -->
+      <div class="mb-3">
+        <%= f.label :description, "Description", class: "form-label fw-bold" %>
+        <%= f.text_area :description, placeholder: "Write something...", class: "form-control rounded-4", rows: 3 %>
+      </div>
 
-  <%= f.submit "Create Post", class: "btn btn-success" %>
+      <!-- Submit Button -->
+      <div class="text-center">
+        <%= f.submit "Create Post", class: "btn btn-success btn-lg px-4" %>
+      </div>
 
-<% end %>
-
+    <% end %>
+  </div>
 </div>
 
+<!-- JS for Image Preview -->
+<script>
+  document.addEventListener("turbo:load", function() {
+    const input = document.getElementById("post_image_input");
+    const preview = document.getElementById("post_image_preview");
+
+    if(input){
+      input.addEventListener("change", function(event){
+        const file = event.target.files[0];
+        if(file){
+          const reader = new FileReader();
+          reader.onload = function(e){
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          }
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = "#";
+          preview.style.display = "none";
+        }
+      });
+    }
+  });
+</script>

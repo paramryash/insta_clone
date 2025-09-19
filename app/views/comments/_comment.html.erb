@@ -46,7 +46,7 @@
 
 <script>
 document.addEventListener("turbo:load", function () {
-  // Reply toggle
+
   document.addEventListener("click", function (event) {
     if (event.target.matches(".reply-link")) {
       event.preventDefault();
@@ -64,7 +64,7 @@ document.addEventListener("turbo:load", function () {
       }
     }
 
-    // Replies toggle
+  
     if (event.target.matches(".toggle-replies-link")) {
       event.preventDefault();
       const commentId = event.target.dataset.commentId;
