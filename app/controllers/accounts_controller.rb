@@ -7,6 +7,7 @@ class AccountsController < ApplicationController
         @posts = @posts = Post.where(account_id: [current_account.id] + current_account.following.ids).order(created_at: :desc)
     @accounts = Account.where.not(id: current_account.id)
     @comments= Comment.all
+    #  @account = current_account
     #  @posts = Post.all.includes(:account, :comments)
       # @accounts = Account.all
       # @posts = Post.all.includes(:comments) 
