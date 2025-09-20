@@ -47,7 +47,9 @@
               <span class="fw-bold small"><%= post.account.username %></span>
 
               <% if current_account == post.account %>
-                <%= link_to post_path(post), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger p-1" do %>
+                <%= link_to post_path(post), 
+                 data: {  turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn-sm btn-outline-danger p-1" do %>
                   <i class="fas fa-trash"></i>
                 <% end %>
               <% end %>
