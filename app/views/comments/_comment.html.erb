@@ -45,41 +45,35 @@
 </div>
 
 <script>
-document.addEventListener("turbo:load", function () {
+  function toggleReplies(event, element) {
+  event.preventDefault();
+  const commentId = element.dataset.commentId;
 
-  document.addEventListener("click", function (event) {
-    if (event.target.matches(".reply-link")) {
-      event.preventDefault();
-      const commentId = event.target.dataset.commentId;
-      const replyForm = document.getElementById(`reply-form-${commentId}`);
+  if (element.classList.contains("reply-link")) {
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    if (!replyForm) return;
 
-      if (!replyForm) return;
-
-      if (replyForm.style.display === "none" || replyForm.style.display === "") {
-        replyForm.style.display = "block";
-        event.target.textContent = "Hide";
-      } else {
-        replyForm.style.display = "none";
-        event.target.textContent = "Reply";
-      }
+    if (replyForm.style.display === "none" || replyForm.style.display === "") {
+      replyForm.style.display = "block";
+      element.textContent = "Hide";
+    } else {
+      replyForm.style.display = "none";
+      element.textContent = "Reply";
     }
+  }
 
-  
-    if (event.target.matches(".toggle-replies-link")) {
-      event.preventDefault();
-      const commentId = event.target.dataset.commentId;
-      const repliesSection = document.getElementById(`comments_${commentId}`);
+  if (element.classList.contains("toggle-replies-link")) {
+    const repliesSection = document.getElementById(`comments_${commentId}`);
+    if (!repliesSection) return;
 
-      if (!repliesSection) return;
-
-      if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
-        repliesSection.style.display = "block";
-        event.target.textContent = "Hide Replies";
-      } else {
-        repliesSection.style.display = "none";
-        event.target.textContent = "View All";
-      }
+    if (repliesSection.style.display === "" || repliesSection.style.display === "none") {
+      repliesSection.style.display = "block";
+      element.textContent = "Hide Replies";
+    } else {
+      repliesSection.style.display = "none";
+      element.textContent = "View All";
     }
-  });
-});
+  }
+}
+
 </script>

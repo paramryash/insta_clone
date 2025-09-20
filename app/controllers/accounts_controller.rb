@@ -4,16 +4,12 @@ class AccountsController < ApplicationController
   before_action :set_account, only: [:show]
 
   def index
-        @posts = @posts = Post.where(account_id: [current_account.id] + current_account.following.ids).order(created_at: :desc)
+    @posts = @posts = Post.where(account_id: [current_account.id] + current_account.following.ids).order(created_at: :desc)
     @accounts = Account.where.not(id: current_account.id)
     @comments= Comment.all
-    #  @account = current_account
-    #  @posts = Post.all.includes(:account, :comments)
-      # @accounts = Account.all
-      # @posts = Post.all.includes(:comments) 
-  
-        @reply_to = params[:reply_to]
-        @post_id = params[:post_id]
+
+    @eply_to = params[:reply_to]
+    @post_id = params[:post_id]
   end
 
   def show
